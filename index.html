@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>地勤任務指揮中心</title>
+  <style>
+    body {
+      margin: 0;
+      background: #0d0f12;
+      color: #e7e7e7;
+      font-family: "Microsoft JhengHei", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      width: 90%;
+      max-width: 480px;
+      background: #15181d;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+      text-align: center;
+    }
+    h1 {
+      font-size: 26px;
+      margin-bottom: 20px;
+      color: #00eaff;
+      letter-spacing: 2px;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: none;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
+      background: #00b7ff;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover { background: #0096d6; }
+
+    .scan-box {
+      margin-top: 25px;
+      font-size: 22px;
+      color: #00ffaa;
+      font-weight: bold;
+      min-height: 40px;
+    }
+
+    .result {
+      margin-top: 25px;
+      background: #111;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid #00eaff;
+      display: none;
+    }
+    .result p {
+      font-size: 20px;
+      margin: 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>地勤任務指揮中心</h1>
+    <p>請輸入您的身分證字號以解鎖任務：</p>
+    <input id="idInput" placeholder="例如：A123456789" />
+    <button onclick="startMission()">解鎖任務</button>
+
+    <div class="scan-box" id="statusText"></div>
+
+    <div class="result" id="resultBox">
+      <p id="nameDisplay"></p>
+      <p id="deptDisplay"></p>
+    </div>
+  </div>
+
+  <script>
+    const data = {
+      "A127880683": { name: "許丞漢", dept: "機坪部" },
+      "G121490609": { name: "陳榮傑", dept: "貨裝部" },
+      "Q123407672": { name: "侯朝升", dept: "貨裝部" },
+      "H123445069": { name: "黃振盈", dept: "旅服部" },
+      "E123781843": { name: "張志堅", dept: "作管部" },
+      "F127959213": { name: "游騰蔚", dept: "旅服部" },
+      "K222219961": { name: "黃誼楟", dept: "艙服部" },
+      "C121279893": { name: "林琨詠", dept: "客裝部" },
+      "H224041692": { name: "詹蕙華", dept: "客裝部" }
+    };
+
+    const steps = [
+      "分發中… 3",
+      "目標鎖定中… 3",
+      "任務準備中… 3",
+      "督導部署倒數… 3"
+    ];
+
+    function startMission() {
+      const id = document.getElementById("idInput").value.trim();
+      const statusText = document.getElementById("statusText");
+      const resultBox = document.getElementById("resultBox");
+      const nameDisplay = document.getElementById("nameDisplay");
+      const deptDisplay = document.getElementById("deptDisplay");
+
+      resultBox.style.display = "none";
+      statusText.textContent = "";
+
+      if (!data[id]) {
+        statusText.textContent = "查無此任務代號";
+        return;
+      }
+
+      let index = 0;
+      function runStep() {
+        if (index < steps.length) {
+          statusText.textContent = steps[index];
+          index++;
+          setTimeout(runStep, 800);
+        } else {
+          statusText.textContent = "任務解鎖！";
+          nameDisplay.textContent = "督導：" + data[id].name;
+          deptDisplay.textContent = "指派至：「" + data[id].dept + "」";
+          resultBox.style.display = "block";
+        }
+      }
+      runStep();
+    }
+  </script>
+</body>
+</html>
